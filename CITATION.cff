@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use prompt-shield in research, please cite the research paper (preferred) or this software repository."
+title: "prompt-shield"
+abstract: "Self-learning prompt injection detection engine for LLM applications. 27 input detectors, 6 output scanners, cross-domain novel techniques (v0.4.0)."
+authors:
+  - family-names: "Nishad"
+    given-names: "Kishan"
+repository-code: "https://github.com/code-with-kishan/Prompt_Shield_Microsoft_Hackathon"
+url: "https://github.com/code-with-kishan/Prompt_Shield_Microsoft_Hackathon"
+license: Apache-2.0
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.19644135"
+    description: "Zenodo v1.0 record for the research paper"
+  - type: other
+    value: "arXiv:2604.18248"
+    description: "arXiv preprint (cs.CR, cs.CL)"
+keywords:
+  - "llm"
+  - "security"
+  - "prompt-injection"
+  - "ai-safety"
+  - "firewall"
+  - "self-learning"
+preferred-citation:
+  type: generic
+  title: "Beyond Pattern Matching: Seven Cross-Domain Techniques for Prompt Injection Detection"
+  authors:
+    - family-names: "Munirathinam"
+      given-names: "Thamilvendhan"
+  year: 2026
+  doi: "10.5281/zenodo.19644135"
+  url: "https://arxiv.org/abs/2604.18248"
+  version: "1.0.0"
+  publisher:
+    name: "arXiv"
+  identifiers:
+    - type: other
+      value: "arXiv:2604.18248"
+      description: "arXiv preprint identifier"
+    - type: doi
+      value: "10.5281/zenodo.19644135"
+      description: "Zenodo DOI anchor"
