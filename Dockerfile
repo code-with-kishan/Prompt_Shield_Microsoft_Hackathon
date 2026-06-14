@@ -6,11 +6,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+# Set up non-root user for Hugging Face compliance (UID 1000)
+RUN useradd -m -u 1000 user
+USER user
+ENV PATH="/home/user/.local/bin:$PATH"
 
-# Copy package descriptors first to cache dependencies
-COPY pyproject.toml README.md ./
-COPY src/ ./src/
+WORKDIR /home/user/app
+
+# Copy package descriptors first to cache dependencies (ensure user ownership)
+COPY --chown=user pyproject.toml README.md ./
+COPY --chown=user src/ ./src/
 
 # Install core, ML, and integration dependencies
 RUN pip install --no-cache-dir \
@@ -35,9 +40,12 @@ RUN pip install --no-cache-dir . --no-deps
 # Pre-cache the sentence-transformers model during build time to avoid slow cold starts
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
-# Expose default port
-EXPOSE 8000
+# Expose default port for Hugging Face Spaces
+ENV PROMPT_SHIELD_PORT=7860
+EXPOSE 7860
 
 # Start the API server
 CMD ["python", "-m", "prompt_shield.api"]
+
+
 
