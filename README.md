@@ -29,6 +29,10 @@
 
 ---
 
+> [!NOTE]
+> **🚀 Microsoft Build AI Hackathon 2026 Submission**
+> `prompt-shield` is a production-grade, highly performant, and self-hardening prompt injection firewall designed to secure LLM applications and autonomous agents against adversarial exploits, data exfiltration, and indirect prompt injections.
+
 The most comprehensive open-source prompt injection firewall for LLM applications. Combines **29 input detectors** (10 languages, 7 encoding schemes, Smith-Waterman sequence alignment for paraphrased attacks, structural many-shot detection), **6 output scanners** (toxicity, code injection, prompt leakage, PII, schema validation, jailbreak detection), a semantic ML classifier (DeBERTa), parallel execution, and a self-hardening feedback loop that gets smarter with every attack.
 
 ### Benchmarked against 5 open-source competitors on 54 real-world 2025-2026 attacks:
@@ -41,19 +45,19 @@ The most comprehensive open-source prompt injection firewall for LLM application
 <th>False Positives</th>
 <th>Speed</th>
 </tr>
-<tr style="font-weight:bold; background:#f0fff0">
-<td>prompt-shield</td>
+<tr style="font-weight:bold; background:#eef9f2">
+<td>prompt-shield (Hybrid)</td>
 <td>96.0%</td>
 <td>92.3%</td>
 <td>0.0%</td>
-<td>555/sec</td>
+<td>555/sec (CPU)</td>
 </tr>
 <tr>
 <td>Deepset DeBERTa v3</td>
 <td>91.9%</td>
 <td>87.2%</td>
 <td>6.7%</td>
-<td>10/sec</td>
+<td>10/sec (GPU required)</td>
 </tr>
 <tr>
 <td>PIGuard (ACL 2025)</td>
@@ -81,6 +85,37 @@ The most comprehensive open-source prompt injection firewall for LLM application
 <p align="center">
   <sub>Reproduce it: <code>pip install prompt-shield-ai && python tests/benchmark_comparison.py</code></sub>
 </p>
+
+---
+
+## ⚔️ How prompt-shield Differs & Wins
+
+In a field saturated with basic pattern matchers and slow ML models, `prompt-shield` sets a new standard for LLM firewall design. Here is how it outclasses current alternatives:
+
+### 1. Hybrid Defense Architecture (F1 vs. Speed)
+*   **The Competitors**: ML models like Deepset/ProtectAI DeBERTa are slow (10–15 scans/sec) and suffer from massive false-positive rates on normal queries (e.g., flagging up to 71% of benign prompts on NotInject). Regular expression scanners are fast but fail instantly against basic synonyms or payload phrasing shifts.
+*   **The prompt-shield Win**: A multi-tiered hybrid system. Fast heuristic filters screen inputs in <1ms. For complex inputs, **Smith-Waterman Sequence Alignment** (a bioinformatics technique) matches sequence structures against known attack signatures, tolerating synonyms and filler words without requiring a heavy ML model. DeBERTa v3 is optionally loaded lazily for deep semantic scans. Result: **96.0% F1 score at 555+ scans/sec on CPU with 0.0% false positives.**
+
+### 2. Universal 3-Gate Agentic Security (AgentGuard)
+*   **The Competitors**: Existing toolkits focus solely on static user-input scanning at the gateway level. They leave agents vulnerable to **Indirect Prompt Injection** (where malicious instructions are pulled from external APIs, web pages, or RAG documents) and **Data Exfiltration** (where agents are coerced into leaking system prompts or private PII to third-party servers).
+*   **The prompt-shield Win**: Implements a strict **3-Gate Security Model** (`AgentGuard`):
+    *   **Gate 1 (Input)**: Cleans and scans user messages.
+    *   **Gate 2 (Data/Tools)**: Sanitizes dynamically retrieved tool/RAG outputs before they reach the agent's context, neutralizing indirect injections.
+    *   **Gate 3 (Output & Canary)**: Performs PII redaction and checks LLM outputs for custom Unicode zero-width canary watermarks to prevent prompt leakage.
+
+### 3. Self-Hardening Feedback Loop & Adversarial Probing Prevention
+*   **The Competitors**: Traditional guardrails are entirely static. If an attacker continuously probes the safety boundaries to reverse-engineer a bypass, the system reacts identically each time until the bypass is found.
+*   **The prompt-shield Win**: Active, stateful defense. 
+    *   **Self-Learning Attack Vault**: Integrates a persistent vector store (ChromaDB) that automatically indexes blocked attacks and generates embeddings. Future variations are instantly caught via semantic similarity.
+    *   **Adversarial Fatigue Tracker**: Using statistical models inspired by materials-science fatigue curves, prompt-shield tracks near-misses (inputs scoring just below the detection threshold) per-user. When probing is detected, it automatically hardens safety thresholds dynamically and triggers webhooks to isolate the user.
+
+### 4. Production-Ready Enterprise DX
+*   **The Competitors**: Research papers often ship with unmaintained code snippets or complex, non-configurable libraries.
+*   **The prompt-shield Win**: Complete ecosystem integration:
+    *   **Middlewares**: One-line drop-in integrations for FastAPI, Flask, and Django.
+    *   **SDK Wrappers**: Seamless decorators/callbacks for OpenAI, Anthropic, LangChain, LlamaIndex, and CrewAI.
+    *   **DevOps Pipelines**: Built-in Click CLI, Docker API server, pre-commit hooks, and a native GitHub Action to scan pull requests for injections and PII leaks.
+    *   **Compliance Engines**: Built-in report generators for **OWASP LLM Top 10 (2025)**, **OWASP Agentic Top 10 (2026)**, and the **EU AI Act**.
 
 ### See it in action
 
@@ -122,7 +157,7 @@ Detects many-shot jailbreaks by structural density (paired-marker counts and den
 
 ## Table of Contents
 
-- [Quick Install](#quick-install) | [Quickstart](#30-second-quickstart) | [Features](#features) | [Architecture](#architecture)
+- [How prompt-shield Differs & Wins](#-how-prompt-shield-differs--wins) | [Quick Install](#quick-install) | [Quickstart](#30-second-quickstart) | [Features](#features) | [Architecture](#architecture)
 - [Detectors (27)](#built-in-detectors) | [Output Scanners (6)](#output-scanners-6) | [Benchmarks](#benchmark-results)
 - [Research: Novel Techniques (v0.4.0)](#research-novel-cross-domain-techniques-v040) -- **NEW**
 - [PII Redaction](#pii-detection--redaction) | [Output Scanning](#output-scanning) | [Red Team](#adversarial-self-testing-red-team)
@@ -484,9 +519,16 @@ if result.canary_leaked:
 ## Integrations
 
 ```python
-# OpenAI / Anthropic wrappers
+# Azure OpenAI / Standard OpenAI / Anthropic wrappers
+from openai import AzureOpenAI
 from prompt_shield.integrations.openai_wrapper import PromptShieldOpenAI
-shield = PromptShieldOpenAI(client=OpenAI(), mode="block")
+
+azure_client = AzureOpenAI(
+    api_key="your-key",
+    api_version="2024-02-15-preview",
+    azure_endpoint="https://your-resource.openai.azure.com/"
+)
+shield = PromptShieldOpenAI(client=azure_client, mode="block")
 
 # FastAPI middleware
 from prompt_shield.integrations.fastapi_middleware import PromptShieldMiddleware
