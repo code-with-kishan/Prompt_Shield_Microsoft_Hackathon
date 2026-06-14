@@ -44,5 +44,7 @@ mkdocs.yml
 
 # Misc
 *.md
+!README.md
 LICENSE
 Makefile
+
