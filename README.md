@@ -19,8 +19,7 @@
   <img src="https://img.shields.io/badge/F1_score-96.0%25-success" alt="F1: 96.0%" />
   <img src="https://img.shields.io/badge/false_positives-0%25-success" alt="0% FP" />
   <img src="https://img.shields.io/badge/tests-829-blue" alt="829 tests" />
-  <a href="https://doi.org/10.5281/zenodo.19644135"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.19644135.svg" alt="DOI" /></a>
-  <a href="https://arxiv.org/abs/2604.18248"><img src="https://img.shields.io/badge/arXiv-2604.18248-b31b1b.svg" alt="arXiv:2604.18248" /></a>
+
 </p>
 
 <p align="center">
