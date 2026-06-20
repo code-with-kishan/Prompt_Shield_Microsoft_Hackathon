@@ -727,19 +727,6 @@ prompt-shield benchmark performance -n 100
 
 ---
 
-## Research: Novel Cross-Domain Techniques (v0.4.0)
-
-[![arXiv](https://img.shields.io/badge/arXiv-2604.18248-b31b1b.svg)](https://arxiv.org/abs/2604.18248) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19644135.svg)](https://doi.org/10.5281/zenodo.19644135)
-
-**Paper:** *Beyond Pattern Matching: Seven Cross-Domain Techniques for Prompt Injection Detection* — preprint on arXiv (cs.CR + cs.CL) with an empirical evaluation section added in v2.0. Prior-art analysis, mechanisms, and published reproduction harness.
-
-- :page_facing_up: **[arXiv preprint](https://arxiv.org/abs/2604.18248)** (canonical, latest, peer-citable)
-- :globe_with_meridians: [Zenodo record](https://zenodo.org/records/19644135) (DOI-anchored, v1.0)
-- :page_facing_up: [Read the v1.0 PDF](docs/papers/cross-domain-techniques.pdf) (in-repo snapshot)
-- :page_facing_up: [v2.0 DOCX](docs/papers/cross-domain-techniques-v2.docx) (in-repo, matches the arXiv version)
-- :memo: [Markdown source](docs/research-post-cross-domain-techniques.md) (browse on GitHub)
-- :books: [`CITATION.cff`](CITATION.cff) (auto-rendered by GitHub's *Cite this repository* sidebar)
-
 ### 1. Stylometric Discontinuity Detection (Forensic Linguistics)
 
 **The problem:** Indirect prompt injections embed attacker instructions inside otherwise benign content (documents, emails, RAG chunks). Pattern matchers miss them because the malicious text doesn't contain known attack keywords.
