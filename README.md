@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <code>pip install prompt-shield-ai</code>
+  <code>Made By Kishan Nishad</code>
 </p>
 
 ---
